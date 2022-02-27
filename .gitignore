@@ -33,6 +33,9 @@ composer.phar
 
 ### dotenv ###
 .env
+.env.development
+.env.testing
+.env.production
 
 ### VisualStudioCode ###
 .vscode/*
