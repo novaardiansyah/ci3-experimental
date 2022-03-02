@@ -24,6 +24,12 @@
   <link rel="stylesheet" href="<?= base_url() ?>assets/adminlte/plugins/daterangepicker/daterangepicker.css">
   <!-- summernote -->
   <link rel="stylesheet" href="<?= base_url() ?>assets/adminlte/plugins/summernote/summernote-bs4.min.css">
+
+  <style>
+    input[type="text"]:disabled {
+      cursor: no-drop;
+    }
+  </style>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
