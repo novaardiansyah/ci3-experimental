@@ -16,4 +16,4 @@
   <link rel="stylesheet" href="<?= base_url() ?>assets/adminlte/dist/css/adminlte.min.css">
 </head>
 
-<body class="hold-transition <?= $page ?>" data-baseurl="<?= base_url() ?>">
+<body class="hold-transition <?= $page ?>" data-baseurl="<?= base_url() ?>" id="base_url">

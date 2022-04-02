@@ -7,40 +7,64 @@
     <div class="card-body register-card-body">
       <p class="login-box-msg">Register a new membership</p>
 
-      <form action="<?= base_url('auth/register') ?>" method="post">
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Full name">
+      <form action="<?= base_url('auth/process_register') ?>" method="post" id="form_register">
+        <div class="input-group">
+          <input type="text" class="form-control form_register" id="fullname" name="fullname" placeholder="Full name">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-user"></span>
             </div>
           </div>
+
+          <div class="invalid-feedback fullname">
+            <!-- Content Here (from Ajax) -->
+          </div>
         </div>
-        <div class="input-group mb-3">
-          <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+        <!-- /.input-group -->
+
+        <div class="input-group mt-3">
+          <input type="text" class="form-control form_register" id="email" name="email" placeholder="Email">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
             </div>
           </div>
+
+          <div class="invalid-feedback email">
+            <!-- Content Here (from Ajax) -->
+          </div>
         </div>
-        <div class="input-group mb-3">
-          <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+        <!-- /.input-group -->
+
+        <div class="input-group mt-3">
+          <input type="password" class="form-control form_register" id="password" name="password" placeholder="Password">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
             </div>
           </div>
+
+          <div class="invalid-feedback password">
+            <!-- Content Here (from Ajax) -->
+          </div>
         </div>
-        <div class="input-group mb-3">
-          <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Retype password">
+        <!-- /.input-group -->
+
+        <div class="input-group mt-3">
+          <input type="password" class="form-control form_register" id="confirm_password" name="confirm_password" placeholder="Retype password">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
             </div>
           </div>
+
+          <div class="invalid-feedback confirm_password">
+            <!-- Content Here (from Ajax) -->
+          </div>
         </div>
-        <div class="row">
+        <!-- /.input-group -->
+
+        <div class="row mt-3">
           <div class="col-8">
             <div class="icheck-primary">
               <input type="checkbox" id="agreeTerms" name="terms" value="agree">
@@ -51,7 +75,7 @@
           </div>
           <!-- /.col -->
           <div class="col-4">
-            <button type="submit" class="btn btn-primary btn-block">Register</button>
+            <button type="submit" class="btn btn-primary btn-block" id="submit_register">Register</button>
           </div>
           <!-- /.col -->
         </div>
