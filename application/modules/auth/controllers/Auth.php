@@ -1,5 +1,4 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
+<?php defined('BASEPATH') or exit('No direct script access allowed');
 
 class Auth extends CI_Controller
 {
@@ -32,7 +31,7 @@ class Auth extends CI_Controller
 		$this->load->view('auth/layouts/footer');
 	}
 
-	public function process_register()
+	public function process_register($type = null)
 	{
 		$rules = $this->_rules_register();
 
@@ -46,14 +45,20 @@ class Auth extends CI_Controller
 			];
 
 			echo json_encode($dataErrors);
-		} else {
-			$data = [
+		} else if ($type == 'validation') {
+			echo json_encode([
+				'status'  => true,
+				'message' => 'Congratulations your data validation is successful.',
+				'type'    => 'validation'
+			]);
+		} else if ($type == 'process') {
+			$send = [
 				'fullname' => $this->input->post('fullname'),
 				'email'    => $this->input->post('email'),
 				'password' => $this->input->post('password'),
+				'redirect' => base_url('auth'),
+				'type'     => 'process',
 			];
-
-			echo json_encode(['status' => true, 'data' => $data]);
 		}
 	}
 

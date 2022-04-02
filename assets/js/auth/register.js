@@ -4,8 +4,10 @@ $(document).ready(function () {
       let focus = $(this).attr('id');
       let dataform = setupform('form_register', 'serialize');
 
-      $('.is-invalid').removeClass('is-invalid');
-      register(dataform.url, dataform.method, dataform.form, dataform.formData, focus);
+      $('.form_register').removeClass('is-invalid');
+      $('.form_register').removeClass('is-valid');
+
+      register(dataform.url + '/validation', dataform.method, dataform.form, dataform.formData, focus);
     });
   });
 
@@ -13,8 +15,10 @@ $(document).ready(function () {
     e.preventDefault();
     let dataform = setupform('form_register', 'serialize');
 
-    $('.is-invalid').removeClass('is-invalid');
-    register(dataform.url, dataform.method, dataform.form, dataform.formData, false);
+    $('.form_register').removeClass('is-invalid');
+    $('.form_register').removeClass('is-valid');
+
+    register(dataform.url + '/process', dataform.method, dataform.form, dataform.formData, false);
   });
 
   const register = function (url, method, form, formData, focus) {
@@ -25,6 +29,7 @@ $(document).ready(function () {
       dataType: 'json',
       async: false,
       success: function (callback) {
+        console.log(callback)
         if (callback.status == false && callback.errors !== null) {
           let errors = callback.errors;
 
@@ -35,6 +40,20 @@ $(document).ready(function () {
             } else if (focus == false) {
               $('#' + key).addClass('is-invalid');
               $('.invalid-feedback.' + key).text(value);
+            }
+          });
+        } else if (callback.status == true && callback.type == 'validation') {
+          $('.form_register').addClass('is-valid');
+          $('.form_register').removeClass('is-invalid');
+        } else if (callback.status == true && callback.type == 'process') {
+          Swal.fire({
+            text: callback.message,
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 5000,
+            timerProgressBar: true,
+            willClose: function () {
+              window.location.href = callback.redirect;
             }
           });
         }

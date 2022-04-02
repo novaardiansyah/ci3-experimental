@@ -7,7 +7,7 @@
     <div class="card-body register-card-body">
       <p class="login-box-msg">Register a new membership</p>
 
-      <form action="<?= base_url('auth/process_register') ?>" method="post" id="form_register">
+      <form action="<?= base_url('auth/process_register') ?>" method="post" id="form_register" autocomplete="off">
         <div class="input-group">
           <input type="text" class="form-control form_register" id="fullname" name="fullname" placeholder="Full name">
           <div class="input-group-append">
