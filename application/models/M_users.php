@@ -7,6 +7,36 @@ class M_users extends CI_Model
     parent::__construct();
   }
 
+  /**
+   * ! Login (Start)
+   */
+  public function login($data)
+  {
+    $email    = $data['email'];
+    $user     = $this->db->get_where('users', ['email' => $email])->row_array();
+    $password = $user['password'] ?? null;
+
+    $verify = password_verify($data['password'], $password) ? true : false;
+
+    if ($verify) {
+      $result = [
+        'status'   => true,
+        'data'     => $user,
+      ];
+    } else {
+      $result = [
+        'status'  => false,
+        'data'    => null,
+      ];
+    }
+
+    return $result;
+  }
+  // ! Login (end)
+
+  /**
+   * ! Register (Start)
+   */
   public function register($data)
   {
     $data_store = [
@@ -38,4 +68,5 @@ class M_users extends CI_Model
 
     return $result;
   }
+  // ! Register (End)
 }

@@ -37,7 +37,7 @@
         <!-- /.input-group -->
 
         <div class="input-group mt-3">
-          <input type="password" class="form-control form_register" id="password" name="password" placeholder="Password">
+          <input type="password" class="form-control form_register form_reset" id="password" name="password" placeholder="Password">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -51,7 +51,7 @@
         <!-- /.input-group -->
 
         <div class="input-group mt-3">
-          <input type="password" class="form-control form_register" id="confirm_password" name="confirm_password" placeholder="Retype password">
+          <input type="password" class="form-control form_register form_reset" id="confirm_password" name="confirm_password" placeholder="Retype password">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -75,7 +75,7 @@
           </div>
           <!-- /.col -->
           <div class="col-4">
-            <button type="submit" class="btn btn-primary btn-block" id="submit_register">Register</button>
+            <button type="submit" class="btn btn-primary btn-block" id="submit_register">Sign Up</button>
           </div>
           <!-- /.col -->
         </div>
