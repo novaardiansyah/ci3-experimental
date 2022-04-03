@@ -2,6 +2,12 @@
 
 class Auth extends CI_Controller
 {
+	public function __construct()
+	{
+		parent::__construct();
+		$this->load->model('M_users');
+	}
+
 	public function index()
 	{
 		$data = [
@@ -56,9 +62,10 @@ class Auth extends CI_Controller
 				'fullname' => $this->input->post('fullname'),
 				'email'    => $this->input->post('email'),
 				'password' => $this->input->post('password'),
-				'redirect' => base_url('auth'),
-				'type'     => 'process',
 			];
+
+			$result = $this->M_users->register($send);
+			echo json_encode($result);
 		}
 	}
 
