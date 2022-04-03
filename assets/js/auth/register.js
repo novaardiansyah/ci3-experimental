@@ -42,6 +42,17 @@ $(document).ready(function () {
               $('.invalid-feedback.' + key).text(value);
             }
           });
+        } else if (callback.status == false && callback.errors == null) {
+          Swal.fire({
+            text: callback.message,
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            willClose: function () {
+              $('.form_register').val('');
+            }
+          });
         } else if (callback.status == true && callback.type == 'validation') {
           $('.form_register').addClass('is-valid');
           $('.form_register').removeClass('is-invalid');
