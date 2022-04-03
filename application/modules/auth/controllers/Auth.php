@@ -51,30 +51,20 @@ class Auth extends CI_Controller
 			$send = [
 				'email'    => $this->input->post('email'),
 				'password' => $this->input->post('password'),
+				'remember' => $this->input->post('remember'),
 			];
 
 			$result = $this->M_users->login($send);
 
 			if ($result['status'] == true) {
-				$data = $result['data'];
-
 				$data_session = [
-					'user_id'          => $data['id'],
-					'user_fullname'    => $data['fullname'],
-					'user_email'       => $data['email'],
-					'user_role_id'     => $data['role_id'],
-					'user_flag_active' => $data['flag_active'],
+					'user_data'        => $result['data'],
+					'user_cookie'			 => $result['cookie']
 				];
 
 				$this->session->set_userdata($data_session);
 
-				echo json_encode([
-					'status'   => true,
-					'message'  => 'Congrats you successfully logged in.',
-					'data'     => $data,
-					'type'     => 'process',
-					'redirect' => base_url('dashboard')
-				]);
+				echo json_encode($result);
 			} else {
 				echo json_encode([
 					'status'  => false,

@@ -33,7 +33,6 @@ $(document).ready(function () {
       dataType: 'json',
       async: false,
       success: function (callback) {
-        console.log('callback', callback);
         $('#submit_login').html('Sign In');
 
         if (callback.status == false && callback.errors !== null) {
