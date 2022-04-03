@@ -1,31 +1,31 @@
 $(document).ready(function () {
-  $('.form_register.form-control').each(function () {
+  $('.form_login.form-control').each(function () {
     $(this).keyup(function () {
       let focus = $(this).attr('id');
-      let dataform = setupform('form_register', 'serialize');
+      let dataform = setupform('form_login', 'serialize');
 
-      $('.form_register').removeClass('is-invalid');
-      $('.form_register').removeClass('is-valid');
+      $('.form_login').removeClass('is-invalid');
+      $('.form_login').removeClass('is-valid');
 
-      register(dataform.url + '/validation', dataform.method, dataform.form, dataform.formData, focus);
+      login(dataform.url + '/validation', dataform.method, dataform.form, dataform.formData, focus);
     });
   });
 
-  $('#form_register').on('submit', function (e) {
+  $('#form_login').on('submit', function (e) {
     e.preventDefault();
-    let dataform = setupform('form_register', 'serialize');
+    let dataform = setupform('form_login', 'serialize');
 
-    $('.form_register').removeClass('is-invalid');
-    $('.form_register').removeClass('is-valid');
+    $('.form_login').removeClass('is-invalid');
+    $('.form_login').removeClass('is-valid');
 
-    $('#submit_register').html('<i class="fa fa-spinner fa-spin"></i>');
+    $('#submit_login').html('<i class="fa fa-spinner fa-spin"></i>');
 
     setTimeout(() => {
-      register(dataform.url + '/process', dataform.method, dataform.form, dataform.formData, false);
+      login(dataform.url + '/process', dataform.method, dataform.form, dataform.formData, false);
     }, 300);
   });
 
-  const register = function (url, method, form, formData, focus) {
+  const login = function (url, method, form, formData, focus) {
     $.ajax({
       url: url,
       type: method,
@@ -33,7 +33,8 @@ $(document).ready(function () {
       dataType: 'json',
       async: false,
       success: function (callback) {
-        $('#submit_register').html('Sign Up');
+        console.log('callback', callback);
+        $('#submit_login').html('Sign In');
 
         if (callback.status == false && callback.errors !== null) {
           let errors = callback.errors;
@@ -55,15 +56,15 @@ $(document).ready(function () {
             timer: 3000,
             timerProgressBar: true,
             willClose: function () {
-              $('.form_register').removeClass('is-valid');
-              $('.form_register').removeClass('is-invalid');
+              $('.form_login').removeClass('is-valid');
+              $('.form_login').removeClass('is-invalid');
 
-              $('.form_register.form_reset').val('');
+              $('.form_login.form_reset').val('');
             }
           });
         } else if (callback.status == true && callback.type == 'validation') {
-          $('.form_register').addClass('is-valid');
-          $('.form_register').removeClass('is-invalid');
+          $('.form_login').addClass('is-valid');
+          $('.form_login').removeClass('is-invalid');
         } else if (callback.status == true && callback.type == 'process') {
           Swal.fire({
             text: callback.message,
