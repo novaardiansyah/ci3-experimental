@@ -20,9 +20,25 @@ $(document).ready(function () {
 
     $('#submit_register').html('<i class="fa fa-spinner fa-spin"></i>');
 
-    setTimeout(() => {
-      register(dataform.url + '/process', dataform.method, dataform.form, dataform.formData, false);
-    }, 300);
+    let agreeTerms;
+    $('#agreeTerms').is(':checked') ? agreeTerms = true : agreeTerms = false;
+
+    if (agreeTerms == false) {
+      Swal.fire({
+        text: 'You must agree to the terms and conditions',
+        icon: 'error',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        willClose: function () {
+          $('#submit_register').html('Sign Up');
+        }
+      });
+    } else {
+      setTimeout(() => {
+        register(dataform.url + '/process', dataform.method, dataform.form, dataform.formData, false);
+      }, 300);
+    }
   });
 
   const register = function (url, method, form, formData, focus) {

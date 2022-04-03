@@ -13,15 +13,39 @@ class M_users extends CI_Model
   public function login($data)
   {
     $email    = $data['email'];
+    $remember = isset($data['remember']) ? true : false;
     $user     = $this->db->get_where('users', ['email' => $email])->row_array();
-    $password = $user['password'] ?? null;
+    $password = $user['password'] ?: null;
 
     $verify = password_verify($data['password'], $password) ? true : false;
 
     if ($verify) {
+      $store_cookie = null;
+
+      if ($remember == true) {
+        $cookie = $this->db->get_where('cookies', ['users_id' => $user['id']])->row_array();
+
+        if ($cookie !== null) {
+          $this->db->delete('cookies', ['users_id' => $user['id']]);
+        }
+
+        $store_cookie = [
+          'users_id'   => $user['id'],
+          'name'       => getenv('PREFIX') . '-login',
+          'cookie'     => hash('sha256', $user['email']),
+          'expired_at' => get_datetimes('+3 days')
+        ];
+
+        $this->db->insert('cookies', $store_cookie);
+      }
+
       $result = [
         'status'   => true,
+        'message'  => 'Congrats you successfully logged in.',
         'data'     => $user,
+        'cookie'   => $store_cookie,
+        'type'     => 'process',
+        'redirect' => base_url('dashboard')
       ];
     } else {
       $result = [
