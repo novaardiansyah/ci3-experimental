@@ -1,6 +1,6 @@
 $(document).ready(function () {
   $('.form_register.form-control').each(function () {
-    $(this).keyup(function () {
+    $(this).on("blur focus", function () {
       let focus = $(this).attr('id');
       let dataform = setupform('form_register', 'serialize');
 
