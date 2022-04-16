@@ -14,6 +14,11 @@
   <link rel="stylesheet" href="<?= base_url() ?>assets/adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="<?= base_url() ?>assets/adminlte/dist/css/adminlte.min.css">
+  <!-- Main Style -->
+  <link rel="stylesheet" href="<?= base_url('assets/css/main.css') ?>">
 </head>
 
 <body class="hold-transition <?= $page ?>" data-baseurl="<?= base_url() ?>" id="base_url">
+  <div id="loader" class="d-flex justify-content-center align-items-center loader">
+    <img src="<?= base_url('assets/images/loader.gif') ?>" alt="loader" width="150" class="img-fluid" />
+  </div>

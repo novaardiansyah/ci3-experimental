@@ -32,7 +32,7 @@ class M_users extends CI_Model
         $store_cookie = [
           'users_id'   => $user['id'],
           'name'       => getenv('PREFIX') . '-login',
-          'cookie'     => hash('sha256', $user['email']),
+          'cookie'     => hash('sha256', $user['email'] . getenv('CODE_PREFIX')),
           'expired_at' => get_datetimes('+3 days')
         ];
 

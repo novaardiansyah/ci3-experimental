@@ -1,0 +1,24 @@
+#loader {
+  opacity: 0.5;
+  display: none;
+}
+
+#loader img {
+  display: none;
+}
+
+#loader.loader {
+  display: flex;
+  transition: all 0.3s ease-in-out;
+  opacity: 1;
+  visibility: visible;
+  position: fixed;
+  height: 100vh;
+  width: 100%;
+  background: #e9ecef;
+  z-index: 90000;
+}
+
+#loader.loader img {
+  display: block;
+}
