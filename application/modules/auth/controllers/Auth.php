@@ -5,7 +5,9 @@ class Auth extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('M_users');
+		$this->load->model('M_users', 'users');
+
+		is_login(true);
 	}
 
 	/**
@@ -54,7 +56,7 @@ class Auth extends CI_Controller
 				'remember' => $this->input->post('remember'),
 			];
 
-			$result = $this->M_users->login($send);
+			$result = $this->users->login($send);
 
 			if ($result['status'] == true) {
 				$data_session = [
@@ -123,7 +125,7 @@ class Auth extends CI_Controller
 				'password' => $this->input->post('password'),
 			];
 
-			$result = $this->M_users->register($send);
+			$result = $this->users->register($send);
 			echo json_encode($result);
 		}
 	}

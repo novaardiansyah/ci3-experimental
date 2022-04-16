@@ -23,3 +23,9 @@ function destroy_session($name = 'session')
   $ci = get_instance();
   return $ci->session->unset_userdata($name);
 }
+
+function set_session($name = 'session', $value = null)
+{
+  $ci = get_instance();
+  return $ci->session->set_userdata($name, $value);
+}
