@@ -5,16 +5,14 @@ class Dashboard extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('M_users');
+		$this->load->model('M_users', 'users');
+		$this->load->model('M_cookies', 'cookies');
+
+		is_login();
 	}
 
 	public function index()
 	{
-		if (get_session('user_cookie') !== null) {
-			$cookie = get_session('user_cookie');
-			setcookie($cookie['name'], $cookie['cookie'], get_times($cookie['expired_at']));
-		}
-
-		var_dump(get_session('user_cookie'));
+		echo 'dashboard';
 	}
 }

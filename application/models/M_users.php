@@ -7,6 +7,29 @@ class M_users extends CI_Model
     parent::__construct();
   }
 
+  public function get_user($params, $type)
+  {
+    if ($type == 'id') {
+      $data = $this->db->get_where('users', ['id' => $params])->row_array();
+    }
+
+    if (!empty($data)) {
+      $result = [
+        'status' => true,
+        'data'   => $data,
+        'message' => 'Successfully get user.'
+      ];
+    } else {
+      $result = [
+        'status' => false,
+        'data'   => null,
+        'message' => 'User not found.'
+      ];
+    }
+
+    return $result;
+  }
+
   /**
    * ! Login (Start)
    */
