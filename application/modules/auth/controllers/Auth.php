@@ -20,7 +20,7 @@ class Auth extends CI_Controller
 			'content' => 'auth',
 			'page'    => 'login-page',
 			'script'  => [
-				'src="' . base_url('assets/js/auth.js') . '"',
+				base_url('assets/js/auth/login.js'),
 			],
 		];
 
@@ -35,21 +35,7 @@ class Auth extends CI_Controller
 
 		$this->form_validation->set_rules($rules);
 
-		if ($this->form_validation->run() == false) {
-			$dataErrors = [
-				'status'  => false,
-				'errors'  => $this->form_validation->error_array(),
-				'message' => 'error validation (codeigniter)',
-			];
-
-			echo json_encode($dataErrors);
-		} else if ($type == 'validation') {
-			echo json_encode([
-				'status'  => true,
-				'message' => 'Congratulations your data validation is successful.',
-				'type'    => 'validation'
-			]);
-		} else if ($type == 'process') {
+		if ($this->form_validation->run() !== false && $type == 'process') {
 			$send = [
 				'email'    => $this->input->post('email'),
 				'password' => $this->input->post('password'),
@@ -59,22 +45,19 @@ class Auth extends CI_Controller
 			$result = $this->users->login($send);
 
 			if ($result['status'] == true) {
-				$data_session = [
+				set_session([
 					'user_data'   => $result['data'],
 					'user_cookie' => $result['cookie']
-				];
-
-				set_session(null, $data_session, 'array');
-
-				echo json_encode($result);
-			} else {
-				echo json_encode([
-					'status'  => false,
-					'message' => 'Sorry your email or password is wrong.',
-					'data'    => $send,
-					'errors'  => null
 				]);
 			}
+
+			echo json_encode($result);
+		} else {
+			echo json_encode([
+				'status'  => false,
+				'errors'  => $this->form_validation->error_array(),
+				'message' => 'error validation (codeigniter)',
+			]);
 		}
 	}
 	// ! Login (End)
@@ -89,7 +72,7 @@ class Auth extends CI_Controller
 			'content' => 'auth/register',
 			'page'    => 'register-page',
 			'script'  => [
-				'assets/js/auth/register.js',
+				base_url('assets/js/auth/register.js'),
 			],
 		];
 
@@ -104,21 +87,7 @@ class Auth extends CI_Controller
 
 		$this->form_validation->set_rules($rules);
 
-		if ($this->form_validation->run() == false) {
-			$dataErrors = [
-				'status'  => false,
-				'errors'  => $this->form_validation->error_array(),
-				'message' => 'error validation (codeigniter)',
-			];
-
-			echo json_encode($dataErrors);
-		} else if ($type == 'validation') {
-			echo json_encode([
-				'status'  => true,
-				'message' => 'Congratulations your data validation is successful.',
-				'type'    => 'validation'
-			]);
-		} else if ($type == 'process') {
+		if ($this->form_validation->run() !== false && $type == 'process') {
 			$send = [
 				'fullname' => $this->input->post('fullname'),
 				'email'    => $this->input->post('email'),
@@ -127,6 +96,12 @@ class Auth extends CI_Controller
 
 			$result = $this->users->register($send);
 			echo json_encode($result);
+		} else {
+			echo json_encode([
+				'status'  => false,
+				'errors'  => $this->form_validation->error_array(),
+				'message' => 'error validation (codeigniter)',
+			]);
 		}
 	}
 	// ! Register (End)
@@ -153,17 +128,20 @@ class Auth extends CI_Controller
 			[
 				'field' => 'fullname',
 				'label' => 'Fullname',
-				'rules' => 'required|trim',
+				'rules' => 'required|trim|min_length[3]|max_length[30]',
 			],
 			[
 				'field' => 'email',
 				'label' => 'Email',
-				'rules' => 'required|trim|valid_emails',
+				'rules' => 'required|trim|valid_emails|min_length[3]|max_length[30]|is_unique[users.email]',
+				'errors' => [
+					'is_unique' => 'This email is already registered.',
+				],
 			],
 			[
 				'field' => 'password',
 				'label' => 'Password',
-				'rules' => 'required|trim|min_length[8]',
+				'rules' => 'required|trim|min_length[6]',
 			],
 			[
 				'field' => 'confirm_password',
@@ -186,7 +164,7 @@ class Auth extends CI_Controller
 			[
 				'field' => 'password',
 				'label' => 'Password',
-				'rules' => 'required|trim|min_length[8]',
+				'rules' => 'required|trim|alpha_numeric',
 			]
 		];
 

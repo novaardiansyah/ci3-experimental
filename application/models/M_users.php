@@ -38,41 +38,54 @@ class M_users extends CI_Model
     $email    = $data['email'];
     $remember = isset($data['remember']) ? true : false;
     $user     = $this->db->get_where('users', ['email' => $email])->row_array();
-    $password = $user['password'] ?: null;
 
-    $verify = password_verify($data['password'], $password) ? true : false;
+    if (!$user) {
+      $result = [
+        'status'  => false,
+        'data'    => null,
+        'message' => 'Email or password is wrong.'
+      ];
 
-    if ($verify) {
-      $store_cookie = null;
+      return $result;
+    }
 
+    if (password_verify($data['password'], $user['password'])) {
       if ($remember == true) {
         $cookie = $this->db->get_where('cookies', ['users_id' => $user['id']])->row_array();
 
         if ($cookie !== null) {
-          $this->db->delete('cookies', ['users_id' => $user['id']]);
+          $update_cookie = [
+            'updated_at' => get_datetimes('now'),
+            'expired_at' => get_datetimes('+3 days')
+          ];
+
+          $this->db->update('cookies', $update_cookie, ['users_id' => $user['id']]);
+        } else {
+          $store_cookie = [
+            'users_id'   => $user['id'],
+            'name'       => getenv('PREFIX') . '-login',
+            'cookie'     => hash('sha256', $user['email'] . getenv('CODE_PREFIX')),
+            'expired_at' => get_datetimes('+3 days')
+          ];
+
+          $this->db->insert('cookies', $store_cookie);
         }
-
-        $store_cookie = [
-          'users_id'   => $user['id'],
-          'name'       => getenv('PREFIX') . '-login',
-          'cookie'     => hash('sha256', $user['email'] . getenv('CODE_PREFIX')),
-          'expired_at' => get_datetimes('+3 days')
-        ];
-
-        $this->db->insert('cookies', $store_cookie);
       }
+
+      $cookie = $this->db->get_where('cookies', ['users_id' => $user['id']])->row();
 
       $result = [
         'status'   => true,
         'message'  => 'Congrats you successfully logged in.',
         'data'     => $user,
-        'cookie'   => $store_cookie,
+        'cookie'   => $remember ? $cookie : null,
         'type'     => 'process',
       ];
     } else {
       $result = [
         'status'  => false,
         'data'    => null,
+        'message' => 'Email or password is wrong.'
       ];
     }
 
@@ -86,6 +99,7 @@ class M_users extends CI_Model
   public function register($data)
   {
     $data_store = [
+      'id'          => generate_uidv4(),
       'fullname'    => $data['fullname'],
       'email'       => $data['email'],
       'password'    => password_hash($data['password'], PASSWORD_DEFAULT),
@@ -101,14 +115,13 @@ class M_users extends CI_Model
         'message'  => 'You have successfully registered, please check your email for verification.',
         'data'     => $data_store,
         'type'     => 'process',
-        'redirect' => base_url('auth')
       ];
     } else {
       $result = [
         'status'  => false,
         'message' => 'Failed to register, please try again.',
         'data'    => $data_store,
-        'errors'  => null
+        'errors'  => ['code' => 'AU12JK']
       ];
     }
 

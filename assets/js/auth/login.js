@@ -1,13 +1,17 @@
 $(document).ready(function () {
   $('.form_login.form-control').each(function () {
-    $(this).on("blur focus", function () {
+    $(this).on("blur", function () {
       let focus = $(this).attr('id');
       let dataform = setupform('form_login', 'serialize');
 
-      $('.form_login').removeClass('is-invalid');
-      $('.form_login').removeClass('is-valid');
+      setTimeout(function () {
+        login(dataform.url + '/validation', dataform.method, dataform.formData, focus);
+      }, 500);
+    });
 
-      login(dataform.url + '/validation', dataform.method, dataform.form, dataform.formData, focus);
+    $(this).on("focus", function () {
+      let focus = $(this).attr('id');
+      $(`.invalid-feedback.${focus}`).hide();
     });
   });
 
@@ -21,13 +25,11 @@ $(document).ready(function () {
     $('#submit_login').html('<i class="fa fa-spinner fa-spin"></i>');
 
     setTimeout(() => {
-      login(dataform.url + '/process', dataform.method, dataform.form, dataform.formData, false);
+      login(dataform.url + '/process', dataform.method, dataform.formData, false);
     }, 300);
   });
 
-  console.log(base_url('auth/dashboard'));
-
-  const login = function (url, method, form, formData, focus) {
+  const login = function (url, method, formData, focus) {
     $.ajax({
       url: url,
       type: method,
@@ -37,36 +39,7 @@ $(document).ready(function () {
       success: function (callback) {
         $('#submit_login').html('Sign In');
 
-        if (callback.status == false && callback.errors !== null) {
-          let errors = callback.errors;
-
-          $.each(errors, function (key, value) {
-            if (focus !== false && focus == key) {
-              $('#' + key).addClass('is-invalid');
-              $('.invalid-feedback.' + key).text(value);
-            } else if (focus == false) {
-              $('#' + key).addClass('is-invalid');
-              $('.invalid-feedback.' + key).text(value);
-            }
-          });
-        } else if (callback.status == false && callback.errors == null) {
-          Swal.fire({
-            text: callback.message,
-            icon: 'error',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            willClose: function () {
-              $('.form_login').removeClass('is-valid');
-              $('.form_login').removeClass('is-invalid');
-
-              $('.form_login.form_reset').val('');
-            }
-          });
-        } else if (callback.status == true && callback.type == 'validation') {
-          $('.form_login').addClass('is-valid');
-          $('.form_login').removeClass('is-invalid');
-        } else if (callback.status == true && callback.type == 'process') {
+        if (callback.status == true) {
           Swal.fire({
             text: callback.message,
             icon: 'success',
@@ -77,27 +50,36 @@ $(document).ready(function () {
               window.location.href = base_url('dashboard');
             }
           });
+        } else {
+          let errors = callback.errors;
+
+          if (errors) {
+            $.each(errors, function (key, value) {
+              if (focus !== false && focus == key) {
+                $('.invalid-feedback.' + key).text(value);
+                $('.invalid-feedback.' + key).show();
+              } else if (focus == false) {
+                $('.invalid-feedback.' + key).text(value);
+                $('.invalid-feedback.' + key).show();
+              }
+            });
+          } else {
+            Swal.fire({
+              text: callback.message,
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              willClose: function () {
+                $('.form_login.form_reset').val('');
+              }
+            });
+          }
         }
       },
       error: function (callback) {
         console.log(callback)
       }
     });
-  }
-
-  const setupform = function (formId, typeFormData) {
-    let form = $(`#${formId}`);
-
-    let formData;
-    if (typeFormData == 'serialize') {
-      formData = form.serialize();
-    } else {
-      formData = new FormData(form[0]);
-    }
-
-    let url = form.attr('action');
-    let method = form.attr('method');
-
-    return { 'form': form, 'formData': formData, 'url': url, 'method': method };
   }
 });
