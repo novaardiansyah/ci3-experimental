@@ -68,7 +68,6 @@ class M_users extends CI_Model
         'data'     => $user,
         'cookie'   => $store_cookie,
         'type'     => 'process',
-        'redirect' => base_url('dashboard')
       ];
     } else {
       $result = [
