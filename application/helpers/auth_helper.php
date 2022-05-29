@@ -31,24 +31,26 @@ function check_cookie($name)
   $ci->load->model('M_users', 'users');
   $ci->load->model('M_cookies', 'cookies');
 
+  $user = $ci->session->userdata('user_data');
+
   if (get_session('user_cookie') !== null) {
     $cookie = get_session('user_cookie');
-    setcookie($cookie['name'], $cookie['cookie'], get_times($cookie['expired_at']));
+    setcookie($cookie->name, $cookie->cookie, get_times($cookie->expired_at));
 
-    return destroy_session('user_cookie');
+    return destroy_session(['user_cookie']);
   } else {
     $current_cookie = get_cookie(getenv('PREFIX') . '-' . $name);
 
     if ($current_cookie) {
       $cookie = $ci->cookies->get_cookie([
-        'cookie' => $current_cookie
+        'cookie'   => $current_cookie,
       ]);
 
       if ($cookie['status'] == true) {
         $user = $ci->users->get_user($cookie['data']->id, 'id');
 
         if ($user['status'] == true) {
-          set_session('user_data', $user['data']);
+          set_session(['user_data' => $user['data']]);
         }
 
         return true;

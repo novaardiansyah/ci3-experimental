@@ -14,8 +14,8 @@
 
 <!-- Content Here (from Controllers) -->
 <?php if (isset($script)) : ?>
-  <?php foreach ($script as $attr) : ?>
-    <script <?= $attr ?>></script>
+  <?php foreach ($script as $path) : ?>
+    <script src="<?= $path ?>"></script>
   <?php endforeach; ?>
 <?php endif; ?>
 </body>
