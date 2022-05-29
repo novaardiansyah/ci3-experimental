@@ -6,8 +6,6 @@ class Auth extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('M_users', 'users');
-
-		is_login(true);
 	}
 
 	/**
@@ -15,12 +13,14 @@ class Auth extends CI_Controller
 	 */
 	public function index()
 	{
+		is_login(true);
+
 		$data = [
 			'title'   => 'Login',
 			'content' => 'auth',
 			'page'    => 'login-page',
 			'script'  => [
-				'assets/js/auth/login.js',
+				'src="' . base_url('assets/js/auth.js') . '"',
 			],
 		];
 
@@ -60,11 +60,11 @@ class Auth extends CI_Controller
 
 			if ($result['status'] == true) {
 				$data_session = [
-					'user_data'        => $result['data'],
-					'user_cookie'			 => $result['cookie']
+					'user_data'   => $result['data'],
+					'user_cookie' => $result['cookie']
 				];
 
-				$this->session->set_userdata($data_session);
+				set_session(null, $data_session, 'array');
 
 				echo json_encode($result);
 			} else {
@@ -130,6 +130,17 @@ class Auth extends CI_Controller
 		}
 	}
 	// ! Register (End)
+
+	/**
+	 * ! Logout (Start)
+	 */
+	public function logout()
+	{
+		destroy_cookie('login');
+		destroy_session(['user_data', 'user_cookie'], 'array');
+		redirect('auth');
+	}
+	// ! Logout (End)
 
 	/**
 	 * ! Utils (Start)

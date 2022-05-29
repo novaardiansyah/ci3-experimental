@@ -25,6 +25,8 @@ $(document).ready(function () {
     }, 300);
   });
 
+  console.log(base_url('auth/dashboard'));
+
   const login = function (url, method, form, formData, focus) {
     $.ajax({
       url: url,
@@ -72,7 +74,7 @@ $(document).ready(function () {
             timer: 5000,
             timerProgressBar: true,
             willClose: function () {
-              window.location.href = callback.redirect;
+              window.location.href = base_url('dashboard');
             }
           });
         }
