@@ -50,3 +50,18 @@ function generate_uidv4()
   // Output the 36 character UUID.
   return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
 }
+
+function set_auditlog($user_id, $audit_type_id, $description, $flag_id = 1)
+{
+  $ci = get_instance();
+
+  $data = [
+    'id'            => generate_uidv4(),
+    'user_id'       => $user_id,
+    'audit_type_id' => $audit_type_id,
+    'description'   => $description,
+    'flag_id'       => $flag_id
+  ];
+
+  return $ci->db->insert('audit_log', $data);
+}
