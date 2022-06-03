@@ -84,17 +84,21 @@ class Auth extends CI_Controller
 	public function process_register($type = null)
 	{
 		$rules = $this->_rules_register();
-
 		$this->form_validation->set_rules($rules);
 
-		if ($this->form_validation->run() !== false && $type == 'process') {
-			$send = [
-				'fullname' => $this->input->post('fullname'),
-				'email'    => $this->input->post('email'),
-				'password' => $this->input->post('password'),
-			];
+		if ($this->form_validation->run() !== false) {
+			$focus = isset($_POST['focus']) ? $_POST['focus'] : '';
+			if ($focus) {
+				echo json_encode(['status' => true]);
+				return;
+			}
 
-			$result = $this->users->register($send);
+			$result = $this->users->register([
+				'fullname' => isset($_POST['fullname']) ? trim($_POST['fullname']) : '',
+				'email'    => isset($_POST['email']) ? trim($_POST['email']) : '',
+				'password' => isset($_POST['password']) ? trim($_POST['password']) : '',
+			]);
+
 			echo json_encode($result);
 		} else {
 			echo json_encode([
@@ -103,6 +107,8 @@ class Auth extends CI_Controller
 				'message' => 'error validation (codeigniter)',
 			]);
 		}
+
+		return;
 	}
 	// ! Register (End)
 
@@ -146,7 +152,7 @@ class Auth extends CI_Controller
 			[
 				'field' => 'confirm_password',
 				'label' => 'Confirm Password',
-				'rules' => 'required|trim|matches[password]',
+				'rules' => 'required|trim|min_length[6]|matches[password]',
 			]
 		];
 

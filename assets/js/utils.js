@@ -16,3 +16,9 @@ const setupform = function (formId, typeFormData) {
 
   return { 'form': form, 'formData': formData, 'url': url, 'method': method };
 }
+
+const stripHtml = function (html) {
+  let tmp = document.createElement("div");
+  tmp.innerHTML = html;
+  return tmp.textContent || tmp.innerText || "";
+}

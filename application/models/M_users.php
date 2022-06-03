@@ -30,9 +30,7 @@ class M_users extends CI_Model
     return $result;
   }
 
-  /**
-   * ! Login (Start)
-   */
+  // * Login (Start)
   public function login($data)
   {
     $email    = $data['email'];
@@ -91,41 +89,38 @@ class M_users extends CI_Model
 
     return $result;
   }
-  // ! Login (end)
+  // * Login (End)
 
-  /**
-   * ! Register (Start)
-   */
+  // * Register (Start)
   public function register($data)
   {
-    $data_store = [
+    $data = [
       'id'          => generate_uidv4(),
       'fullname'    => $data['fullname'],
       'email'       => $data['email'],
       'password'    => password_hash($data['password'], PASSWORD_DEFAULT),
       'role_id'     => 1,
-      'flag_active' => 1,
     ];
 
-    $store = $this->db->insert('users', $data_store);
+    $store = $this->db->insert('users', $data);
 
     if ($store) {
+      set_auditlog($data['id'], 2, "User ({$data['email']}) has been registered.");
+
       $result = [
         'status'   => true,
         'message'  => 'You have successfully registered, please check your email for verification.',
-        'data'     => $data_store,
-        'type'     => 'process',
+        'data'     => $data
       ];
     } else {
       $result = [
         'status'  => false,
         'message' => 'Failed to register, please try again.',
-        'data'    => $data_store,
-        'errors'  => ['code' => 'AU12JK']
+        'data'    => $data
       ];
     }
 
     return $result;
   }
-  // ! Register (End)
+  // * Register (End)
 }
